@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAMBA CUP</title>
+    <style>
+        body {
+            background-color: #2E1065;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #1a0a3a;
+        }
+        .logo {
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #FACC15;
+            margin: 0;
+            font-size: 2em;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #1a0a3a;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .zona-tabs {
+            margin-bottom: 20px;
+        }
+        .zona-tab {
+            display: block;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: #4B5563;
+            border: 2px solid #FACC15;
+            color: #FACC15;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .zona-tab.active {
+            background-color: #FACC15;
+            color: #2E1065;
+        }
+        .zona-tab:hover:not(.active) {
+            background-color: #6B7280;
+        }
+        .section-tabs {
+            margin-top: 30px;
+        }
+        .section-tab {
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: #4B5563;
+            border: 2px solid #FACC15;
+            color: #FACC15;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .section-tab.active {
+            background-color: #FACC15;
+            color: #2E1065;
+        }
+        .section-tab:hover:not(.active) {
+            background-color: #6B7280;
+        }
+        .zona-container {
+            display: none;
+        }
+        .zona-container.active {
+            display: block;
+        }
+        .container {
+            background-color: rgba(63, 63, 70, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            max-width: 900px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 2px solid #FACC15;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #3F3F46;
+            color: white;
+            width: 100%;
+            border: 2px solid #FACC15;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #FACC15;
+            text-align: center;
+        }
+        th {
+            background-color: #FACC15;
+            color: #2E1065;
+            font-weight: bold;
+        }
+        tr:nth-child(even) td {
+            background-color: #52525B;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #FACC15;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background-color: #4B5563;
+            color: white;
+            border: 1px solid #FACC15;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #FACC15;
+            color: #2E1065;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #EAB308;
+            transform: scale(1.05);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 10px;
+            }
+            .content {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            button {
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <!-- CAMBIA "logo.png" POR LA RUTA DE TU IMAGEN -->
+        <img src="logo.png" alt="Logo de la Liga" class="logo">
+        <h1>MAMBA CUP</h1>
+    </div>
+    
+    <div class="main-container">
+        <!-- BARRA LATERAL -->
+        <div class="sidebar">
+            <div class="zona-tabs">
+                <div class="zona-tab active" onclick="cambiarZona('Este')">Zona Este</div>
+                <div class="zona-tab" onclick="cambiarZona('Oeste')">Zona Oeste</div>
+            </div>
+            
+            <div class="section-tabs">
+                <div class="section-tab active" onclick="abrirSeccion('equipos')">Equipos</div>
+                <div class="section-tab" onclick="abrirSeccion('partidos')">Partidos</div>
+                <div class="section-tab" onclick="abrirSeccion('tabla')">Tabla</div>
+            </div>
+        </div>
+        
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="content">
+            <!-- ZONA ESTE -->
+            <div id="zona-Este" class="zona-container active">
+                <!-- SECCIÓN EQUIPOS - ZONA ESTE -->
+                <div id="Este-equipos" class="container tab-content active">
+                    <h2>Registrar Equipos - Zona Este</h2>
+                    <div class="form-group">
+                        <label for="nombreEquipo-Este">Nombre del Equipo:</label>
+                        <input type="text" id="nombreEquipo-Este">
+                    </div>
+                    <button onclick="agregarEquipo('Este')">Agregar Equipo</button>
+                    
+                    <h2>Equipos Registrados</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Equipo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equiposBody-Este"></tbody>
+                    </table>
+                </div>
+                
+                <!-- SECCIÓN PARTIDOS - ZONA ESTE -->
+                <div id="Este-partidos" class="container tab-content">
+                    <h2>Registrar Partido - Zona Este</h2>
+                    <div class="form-group">
+                        <label for="equipoLocal-Este">Equipo Local:</label>
+                        <select id="equipoLocal-Este">
+                            <option value="">Seleccione un equipo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="puntosLocal-Este">Puntos Local:</label>
+                        <input type="number" id="puntosLocal-Este" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="equipoVisitante-Este">Equipo Visitante:</label>
+                        <select id="equipoVisitante-Este">
+                            <option value="">Seleccione un equipo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="puntosVisitante-Este">Puntos Visitante:</label>
+                        <input type="number" id="puntosVisitante-Este" min="0" value="0">
+                    </div>
+                    <button onclick="registrarPartido('Este')">Registrar Partido</button>
+                    
+                    <h2>Historial de Partidos</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Local</th>
+                                <th>Puntos</th>
+                                <th>Visitante</th>
+                                <th>Puntos</th>
+                                <th>Ganador</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partidosBody-Este"></tbody>
+                    </table>
+                </div>
+                
+                <!-- SECCIÓN TABLA - ZONA ESTE -->
+                <div id="Este-tabla" class="container tab-content">
+                    <h2>Tabla de Posiciones - Zona Este</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Equipo</th>
+                                <th>Pts</th>
+                                <th>PJ</th>
+                                <th>PG</th>
+                                <th>PE</th>
+                                <th>PP</th>
+                                <th>GF</th>
+                                <th>GC</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posicionesBody-Este"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ZONA OESTE -->
+            <div id="zona-Oeste" class="zona-container">
+                <!-- SECCIÓN EQUIPOS - ZONA OESTE -->
+                <div id="Oeste-equipos" class="container tab-content">
+                    <h2>Registrar Equipos - Zona Oeste</h2>
+                    <div class="form-group">
+                        <label for="nombreEquipo-Oeste">Nombre del Equipo:</label>
+                        <input type="text" id="nombreEquipo-Oeste">
+                    </div>
+                    <button onclick="agregarEquipo('Oeste')">Agregar Equipo</button>
+                    
+                    <h2>Equipos Registrados</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Equipo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equiposBody-Oeste"></tbody>
+                    </table>
+                </div>
+                
+                <!-- SECCIÓN PARTIDOS - ZONA OESTE -->
+                <div id="Oeste-partidos" class="container tab-content">
+                    <h2>Registrar Partido - Zona Oeste</h2>
+                    <div class="form-group">
+                        <label for="equipoLocal-Oeste">Equipo Local:</label>
+                        <select id="equipoLocal-Oeste">
+                            <option value="">Seleccione un equipo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="puntosLocal-Oeste">Puntos Local:</label>
+                        <input type="number" id="puntosLocal-Oeste" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="equipoVisitante-Oeste">Equipo Visitante:</label>
+                        <select id="equipoVisitante-Oeste">
+                            <option value="">Seleccione un equipo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="puntosVisitante-Oeste">Puntos Visitante:</label>
+                        <input type="number" id="puntosVisitante-Oeste" min="0" value="0">
+                    </div>
+                    <button onclick="registrarPartido('Oeste')">Registrar Partido</button>
+                    
+                    <h2>Historial de Partidos</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Local</th>
+                                <th>Puntos</th>
+                                <th>Visitante</th>
+                                <th>Puntos</th>
+                                <th>Ganador</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partidosBody-Oeste"></tbody>
+                    </table>
+                </div>
+                
+                <!-- SECCIÓN TABLA - ZONA OESTE -->
+                <div id="Oeste-tabla" class="container tab-content">
+                    <h2>Tabla de Posiciones - Zona Oeste</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Equipo</th>
+                                <th>Pts</th>
+                                <th>PJ</th>
+                                <th>PG</th>
+                                <th>PE</th>
+                                <th>PP</th>
+                                <th>GF</th>
+                                <th>GC</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posicionesBody-Oeste"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos por zona
+        const datos = {
+            Este: { equipos: [], partidos: [] },
+            Oeste: { equipos: [], partidos: [] }
+        };
+
+        // Variables para controlar la zona y sección activa
+        let zonaActiva = 'Este';
+        let seccionActiva = 'equipos';
+
+        // Cargar datos al iniciar
+        window.onload = function() {
+            cargarDatos();
+            actualizarSelectsEquipos('Este');
+            actualizarSelectsEquipos('Oeste');
+            mostrarEquipos('Este');
+            mostrarEquipos('Oeste');
+            mostrarPartidos('Este');
+            mostrarPartidos('Oeste');
+            actualizarTablaPosiciones('Este');
+            actualizarTablaPosiciones('Oeste');
+            actualizarVista();
+        };
+
+        // Cambiar entre zonas
+        function cambiarZona(zona) {
+            zonaActiva = zona;
+            actualizarVista();
+        }
+
+        // Cambiar secciones (equipos/partidos/tabla)
+        function abrirSeccion(seccion) {
+            seccionActiva = seccion;
+            actualizarVista();
+        }
+
+        // Actualizar la vista según zona y sección activa
+        function actualizarVista() {
+            // Actualizar pestañas de zona
+            document.querySelectorAll('.zona-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent.includes(zonaActiva));
+            });
+            
+            // Actualizar contenedores de zona
+            document.querySelectorAll('.zona-container').forEach(container => {
+                container.classList.toggle('active', container.id.includes(zonaActiva));
+            });
+            
+            // Actualizar pestañas de sección
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.getAttribute('onclick').includes(seccionActiva));
+            });
+            
+            // Actualizar contenido de sección para la zona activa
+            document.querySelectorAll('.tab-content').forEach(content => {
+                const esDeZonaActiva = content.id.startsWith(zonaActiva);
+                const esSeccionActiva = content.id.includes(seccionActiva);
+                content.classList.toggle('active', esDeZonaActiva && esSeccionActiva);
+            });
+        }
+
+        // Funciones para equipos
+        function agregarEquipo(zona) {
+            const nombre = document.getElementById(`nombreEquipo-${zona}`).value.trim();
+            
+            if (!nombre) {
+                alert('Ingrese un nombre válido');
+                return;
+            }
+            
+            if (datos[zona].equipos.some(e => e.nombre.toLowerCase() === nombre.toLowerCase())) {
+                alert('Equipo ya registrado');
+                return;
+            }
+            
+            datos[zona].equipos.push({
+                nombre,
+                puntos: 0,
+                partidosJugados: 0,
+                partidosGanados: 0,
+                partidosEmpatados: 0,
+                partidosPerdidos: 0,
+                golesFavor: 0,
+                golesContra: 0,
+                diferencia: 0
+            });
+            
+            guardarDatos();
+            document.getElementById(`nombreEquipo-${zona}`).value = '';
+            mostrarEquipos(zona);
+            actualizarSelectsEquipos(zona);
+            actualizarTablaPosiciones(zona);
+        }
+
+        function mostrarEquipos(zona) {
+            const tbody = document.getElementById(`equiposBody-${zona}`);
+            tbody.innerHTML = '';
+            
+            datos[zona].equipos.forEach((equipo, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${equipo.nombre}</td>
+                    <td>
+                        <button onclick="eliminarEquipo('${zona}', ${index})">Eliminar</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function eliminarEquipo(zona, index) {
+            if (confirm(`¿Eliminar ${datos[zona].equipos[index].nombre}? Se borrarán todos sus partidos.`)) {
+                // Eliminar partidos relacionados
+                datos[zona].partidos = datos[zona].partidos.filter(p => 
+                    p.local !== datos[zona].equipos[index].nombre && 
+                    p.visitante !== datos[zona].equipos[index].nombre
+                );
+                
+                // Eliminar equipo
+                datos[zona].equipos.splice(index, 1);
+                
+                // Recalcular estadísticas
+                recalcularEstadisticas(zona);
+                
+                guardarDatos();
+                mostrarEquipos(zona);
+                mostrarPartidos(zona);
+                actualizarSelectsEquipos(zona);
+                actualizarTablaPosiciones(zona);
+            }
+        }
+
+        function actualizarSelectsEquipos(zona) {
+            const selectLocal = document.getElementById(`equipoLocal-${zona}`);
+            const selectVisitante = document.getElementById(`equipoVisitante-${zona}`);
+            
+            // Limpiar selects
+            selectLocal.innerHTML = '<option value="">Seleccione un equipo</option>';
+            selectVisitante.innerHTML = '<option value="">Seleccione un equipo</option>';
+            
+            // Llenar con equipos de la zona
+            datos[zona].equipos.forEach(equipo => {
+                const option = document.createElement('option');
+                option.value = equipo.nombre;
+                option.textContent = equipo.nombre;
+                
+                selectLocal.appendChild(option.cloneNode(true));
+                selectVisitante.appendChild(option);
+            });
+        }
+
+        // Funciones para partidos
+        function registrarPartido(zona) {
+            const local = document.getElementById(`equipoLocal-${zona}`).value;
+            const puntosLocal = parseInt(document.getElementById(`puntosLocal-${zona}`).value);
+            const visitante = document.getElementById(`equipoVisitante-${zona}`).value;
+            const puntosVisitante = parseInt(document.getElementById(`puntosVisitante-${zona}`).value);
+            
+            // Validaciones
+            if (!local || !visitante) {
+                alert('Seleccione ambos equipos');
+                return;
+            }
+            
+            if (local === visitante) {
+                alert('Un equipo no puede jugar contra sí mismo');
+                return;
+            }
+            
+            if (isNaN(puntosLocal) || isNaN(puntosVisitante)) {
+                alert('Puntajes inválidos');
+                return;
+            }
+            
+            if (puntosLocal < 0 || puntosVisitante < 0) {
+                alert('Los puntajes no pueden ser negativos');
+                return;
+            }
+            
+            // Registrar partido
+            datos[zona].partidos.push({
+                local,
+                puntosLocal,
+                visitante,
+                puntosVisitante,
+                fecha: new Date().toLocaleString()
+            });
+            
+            // Actualizar estadísticas
+            actualizarEstadisticas(zona, local, puntosLocal, visitante, puntosVisitante);
+            
+            guardarDatos();
+            mostrarPartidos(zona);
+            actualizarTablaPosiciones(zona);
+            
+            // Limpiar formulario
+            document.getElementById(`puntosLocal-${zona}`).value = '0';
+            document.getElementById(`puntosVisitante-${zona}`).value = '0';
+        }
+
+        function actualizarEstadisticas(zona, local, puntosLocal, visitante, puntosVisitante) {
+            const eqLocal = datos[zona].equipos.find(e => e.nombre === local);
+            const eqVisitante = datos[zona].equipos.find(e => e.nombre === visitante);
+            
+            if (!eqLocal || !eqVisitante) return;
+            
+            // Actualizar partidos jugados
+            eqLocal.partidosJugados++;
+            eqVisitante.partidosJugados++;
+            
+            // Actualizar goles
+            eqLocal.golesFavor += puntosLocal;
+            eqLocal.golesContra += puntosVisitante;
+            eqLocal.diferencia = eqLocal.golesFavor - eqLocal.golesContra;
+            
+            eqVisitante.golesFavor += puntosVisitante;
+            eqVisitante.golesContra += puntosLocal;
+            eqVisitante.diferencia = eqVisitante.golesFavor - eqVisitante.golesContra;
+            
+            // Asignar puntos (3-1-0)
+            if (puntosLocal > puntosVisitante) {
+                eqLocal.puntos += 3;
+                eqLocal.partidosGanados++;
+                eqVisitante.partidosPerdidos++;
+            } else if (puntosLocal < puntosVisitante) {
+                eqVisitante.puntos += 3;
+                eqVisitante.partidosGanados++;
+                eqLocal.partidosPerdidos++;
+            } else {
+                eqLocal.puntos += 1;
+                eqVisitante.puntos += 1;
+                eqLocal.partidosEmpatados++;
+                eqVisitante.partidosEmpatados++;
+            }
+        }
+
+        function mostrarPartidos(zona) {
+            const tbody = document.getElementById(`partidosBody-${zona}`);
+            tbody.innerHTML = '';
+            
+            // Ordenar partidos por fecha (más recientes primero)
+            const partidosOrdenados = [...datos[zona].partidos].sort((a, b) => 
+                new Date(b.fecha) - new Date(a.fecha)
+            );
+            
+            partidosOrdenados.forEach(partido => {
+                const row = document.createElement('tr');
+                
+                let ganador = 'Empate';
+                if (partido.puntosLocal > partido.puntosVisitante) ganador = partido.local;
+                else if (partido.puntosLocal < partido.puntosVisitante) ganador = partido.visitante;
+                
+                row.innerHTML = `
+                    <td>${partido.local}</td>
+                    <td>${partido.puntosLocal}</td>
+                    <td>${partido.visitante}</td>
+                    <td>${partido.puntosVisitante}</td>
+                    <td>${ganador}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Funciones para tabla de posiciones
+        function actualizarTablaPosiciones(zona) {
+            const equiposOrdenados = [...datos[zona].equipos].sort((a, b) => {
+                if (b.puntos !== a.puntos) return b.puntos - a.puntos;
+                if (b.diferencia !== a.diferencia) return b.diferencia - a.diferencia;
+                return b.golesFavor - a.golesFavor;
+            });
+            
+            const tbody = document.getElementById(`posicionesBody-${zona}`);
+            tbody.innerHTML = '';
+            
+            equiposOrdenados.forEach((equipo, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${equipo.nombre}</td>
+                    <td>${equipo.puntos}</td>
+                    <td>${equipo.partidosJugados}</td>
+                    <td>${equipo.partidosGanados}</td>
+                    <td>${equipo.partidosEmpatados}</td>
+                    <td>${equipo.partidosPerdidos}</td>
+                    <td>${equipo.golesFavor}</td>
+                    <td>${equipo.golesContra}</td>
+                    <td>${equipo.diferencia >= 0 ? '+' : ''}${equipo.diferencia}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Almacenamiento local
+        function guardarDatos() {
+            localStorage.setItem('baloncestoZonas', JSON.stringify(datos));
+        }
+
+        function cargarDatos() {
+            const guardado = localStorage.getItem('baloncestoZonas');
+            if (guardado) {
+                const parsed = JSON.parse(guardado);
+                datos.Este = parsed.Este || { equipos: [], partidos: [] };
+                datos.Oeste = parsed.Oeste || { equipos: [], partidos: [] };
+                
+                // Recalcular estadísticas
+                recalcularEstadisticas('Este');
+                recalcularEstadisticas('Oeste');
+            }
+        }
+
+        function recalcularEstadisticas(zona) {
+            // Resetear estadísticas
+            datos[zona].equipos.forEach(equipo => {
+                equipo.puntos = 0;
+                equipo.partidosJugados = 0;
+                equipo.partidosGanados = 0;
+                equipo.partidosEmpatados = 0;
+                equipo.partidosPerdidos = 0;
+                equipo.golesFavor = 0;
+                equipo.golesContra = 0;
+                equipo.diferencia = 0;
+            });
+            
+            // Recalcular basado en partidos
+            datos[zona].partidos.forEach(partido => {
+                actualizarEstadisticas(
+                    zona,
+                    partido.local,
+                    partido.puntosLocal,
+                    partido.visitante,
+                    partido.puntosVisitante
+                );
+            });
+        }
+    </script>
+</body>
+</html>
