@@ -1,2 +1,6 @@
 mamba-cup-firebase-adminsdk-*.json
 .github/
+# Excepciones para GitHub Actions
+!.github/workflows/
+!.github/workflows/*.yml
+
