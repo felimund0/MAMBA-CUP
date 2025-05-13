@@ -3,5 +3,9 @@ mamba-cup-firebase-adminsdk-*.json
 # Excepciones para GitHub Actions
 !.github/workflows/
 !.github/workflows/*.yml
+# Ignora todo en .github excepto workflows
+.github/*
+!.github/workflows/
+!.github/workflows/*.yml
 
 
